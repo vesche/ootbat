@@ -1,0 +1,12 @@
+[Unit]
+Description=ootbat
+
+[Service]
+Type=simple
+User=user
+Group=user
+ExecStart=/opt/ootbat/ootbat
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
