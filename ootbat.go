@@ -1,12 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
-	"os/exec"
+	"log"
+	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/faiface/beep/speaker"
+	"github.com/faiface/beep/wav"
 )
 
 func getBatteryPercentage() int {
@@ -23,6 +26,16 @@ func getBatteryStatus() string {
 }
 
 func main() {
+	f, err := os.Open("/opt/ootbat/OOT_LowHealth.wav")
+	if err != nil {
+		log.Fatal(err)
+	}
+	streamer, format, err := wav.Decode(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
 	for {
 		var batteryPercentage int
 		batteryPercentage = getBatteryPercentage()
@@ -30,12 +43,9 @@ func main() {
 		var batteryStatus string
 		batteryStatus = getBatteryStatus()
 
-		if batteryPercentage < 5 && batteryStatus != "Charging" {
-			cmd := exec.Command("/usr/bin/aplay", "/opt/ootbat/OOT_LowHealth.wav")
-			err := cmd.Run()
-			if err != nil {
-				fmt.Println(err)
-			}
+		if batteryPercentage <= 5 && batteryStatus != "Charging" {
+			streamer.Seek(0)
+			speaker.Play(streamer)
 		}
 
 		time.Sleep(10 * time.Second)
