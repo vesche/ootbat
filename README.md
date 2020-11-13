@@ -5,9 +5,6 @@ I keep tunnel visioning on code and then my battery dies :broken_heart:. This pr
 ![hearts](hearts.png)
 
 ```
-$ go get "github.com/faiface/beep/speaker"
-$ go get "github.com/faiface/beep/wav"
-
 $ sudo bash install.sh
 Created symlink /etc/systemd/system/multi-user.target.wants/ootbat.service → /usr/lib/systemd/system/ootbat.service.
 
